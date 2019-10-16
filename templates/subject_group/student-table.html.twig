@@ -1,4 +1,4 @@
-<table class="table table-striped">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th scope="col">ID</th>
@@ -8,8 +8,8 @@
     </thead>
     <tbody>
         {% for student in students %}
-            <tr>
-                <th scope="row"><a href="/subject/{{ subjectName.id }}/group/{{ subjectGroup.id }}/student/{{ student.id }}"/>{{ student.id }}</a></th>
+            <tr class='clickable-row' data-href='/subject/{{ subjectName.id }}/group/{{ subjectGroup.id }}/student/{{ student.id }}'>
+                <th scope="row">{{ student.id }}</th>
                 <td>{{ student.forename }}</td>
                 <td>{{ student.surname }}</td>
                 {# <td>

@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * User
@@ -12,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="user", indexes={@ORM\Index(name="fk_User_Group1_idx", columns={"subjectGroup"})})
  * @ORM\Entity
  */
-class User
+class User implements UserInterface, \Serializable
 {
     /**
      * @var int
@@ -26,37 +29,52 @@ class User
     /**
      * @var string|null
      *
-     * @ORM\Column(name="username", type="string", length=45, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="username", type="string", length=45, unique=true, nullable=true, options={"default"="NULL"})
      */
-    private $username = 'NULL';
+    private $username;
+
+    /**
+     * @var string
+     * 
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="password", type="string", length=45, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="password", type="string", length=255, nullable=true, options={"default"="NULL"})
      */
-    private $password = 'NULL';
+    private $password;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="roles", type="array", length=255, nullable=false)
+     */
+    private $roles = [];
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="email", type="string", length=45, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(name="email", type="string", length=45, unique=true, nullable=true, options={"default"="NULL"})
      */
-    private $email = 'NULL';
+    private $email;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="forename", type="string", length=45, nullable=true, options={"default"="NULL"})
      */
-    private $forename = 'NULL';
+    private $forename;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="surname", type="string", length=45, nullable=true, options={"default"="NULL"})
      */
-    private $surname = 'NULL';
+    private $surname;
 
     /**
      * @var \Subjectgroup
@@ -108,6 +126,16 @@ class User
         return $this;
     }
 
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
+        return $this;
+    }
+
     public function getPassword(): ?string
     {
         return $this->password;
@@ -118,6 +146,26 @@ class User
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+    
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+    public function resetRoles()
+    {
+        $this->roles = [];
     }
 
     public function getEmail(): ?string
@@ -194,4 +242,35 @@ class User
         return $this;
     }
 
+    public function getSalt() {
+        
+    }
+
+    public function eraseCredentials() {
+    }
+
+    public function serialize() {
+        return serialize([
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->email,
+            $this->roles
+        ]);
+    }
+
+    public function unserialize($string) {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->email,
+            $this->roles
+        ) = unserialize($string, ['allowed_classes' => false]);
+    }
+
+    public function getIduser(): ?int
+    {
+        return $this->iduser;
+    }
 }

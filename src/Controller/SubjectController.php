@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Subject;
 use App\Entity\Subjectname;
 use App\Entity\Subjectgroup;
+use App\Entity\Subjectteacher;
 
 class SubjectController extends AbstractController
 {
@@ -20,19 +21,19 @@ class SubjectController extends AbstractController
 
         $subjectName = $this->getDoctrine()->getRepository(Subjectname::class)->find($subjectID);
         
-        // Znajdz id przedmiotu
+        // Znajdź przedmiot
         $subjects = $this->getDoctrine()->getRepository(Subject::class)->findBy(['subjectname' => $subjectID]);
         
-        if($subjects) {
-            foreach($subjects as $subject) {
-                $groups[] = $this->getDoctrine()->getRepository(Subjectgroup::class)->find( $subject->getSubjectgroup() );
-            }
-
-        }
+        // if($subjects) {
+        //     foreach($subjects as $subject) {
+        //         $groups[] = $this->getDoctrine()->getRepository(Subjectgroup::class)->find( $subject->getSubjectgroup() );
+        //         $subjectTeachers = $this->getDoctrine()->getRepository(Subjectteacher::class)->findBy([ 'subject' => $subjectID ]);
+        //     }
+        // }
         
         return $this->render('subject/index.html.twig', [
             'subjectName' => $subjectName,
-            'groups' => $groups,
+            'subjectGroups' => $subjects,
         ]);
     }
 }
