@@ -20,9 +20,11 @@
                         {% for subject in subjects.getAllSubjects() %}
                             <a class="dropdown-item" href="/subject/{{ subject.id }}">{{ subject.content }}</a>
                         {% endfor %}
-                        <div class="dropdown-divider"></div>
-                        <h6 class="dropdown-header">Opcje</h6>
-                        <a class="dropdown-item" href="/subject/new">Dodaj</a>
+                        {% if is_granted('ROLE_TEACHER') %} 
+                            <div class="dropdown-divider"></div>
+                            <h6 class="dropdown-header">Opcje</h6>
+                            <a class="dropdown-item" href="/subject/new">Dodaj</a>
+                        {% endif %}
                     </div>
                 </li>
             </ul>

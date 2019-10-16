@@ -12,7 +12,7 @@
     <div class="d-flex flex-row justify-content-between mb-3">
         <h1>Uczniowie</h1>
         <div class="btn-group" role="group">
-            {% if is_granted('ROLE_USER') %}
+            {% if is_granted('ROLE_TEACHER') %} 
             <a href="/group/add" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
             {% endif %}
         </div>
