@@ -1,0 +1,28 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nazwa</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for group in groups %}
+            <tr>
+                <th scope="row"><a href="/subject/{{ subjectName.id }}/group/{{ group.id }}"/>{{ group.id }}</a></th>
+                <td>{{ group.name }}</td>
+                {# <td>
+                    <div class="btn-group" role="group">
+                        {% if is_granted('ROLE_USER') %}
+                        <!-- Wyświetl opcję związane z daną produkcją dostępne dla użytkownika -->
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <!-- Wyświetl opcję związane z daną produkcją dostępne dla administratora -->
+                        <a href="/movies/edit/{{ movie.idProduction }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
+                        <a href="/movies/delete/{{ movie.idProduction }}" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
+                        {% endif %}
+                    </div>
+                </td> #}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

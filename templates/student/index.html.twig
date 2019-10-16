@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ subjectName.content }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+        <li class="breadcrumb-item"><a href="#">{{ subjectName.content }}</a></li>
+        <li class="breadcrumb-item"><a href="#">{{ subjectGroup.name }}</a></li>
+        <li class="breadcrumb-item active"><a href="#">{{ student.forename }} {{ student.surname }}</a></li>
+    </ol>
+    <div class="d-flex flex-row justify-content-between mb-3">
+        <h1>Oceny</h1>
+        <div class="btn-group" role="group">
+            {% if is_granted('ROLE_USER') %}
+            <a href="/group/add" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if grades %}
+        {{ include('/student/grade-table.html.twig') }}
+    {% else %}
+    
+    <div class="alert alert-dismissible alert-danger">
+        <strong>Nie znaleziono żadnych ocen dla tego ucznia.</strong>
+    </div>
+    {% endif %}   
+</div>
+{% endblock %}
