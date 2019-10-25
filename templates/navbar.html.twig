@@ -11,6 +11,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/">Strona główna</a>
                 </li>
+                {# <li class="nav-item">
+                    <a class="nav-link" href="/group">Grupy</a>
+                </li> #}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Przedmioty
@@ -23,7 +26,7 @@
                         {% if is_granted('ROLE_TEACHER') %} 
                             <div class="dropdown-divider"></div>
                             <h6 class="dropdown-header">Opcje</h6>
-                            <a class="dropdown-item" href="/subject/new">Dodaj</a>
+                            <a class="dropdown-item" href="/subjectName/new">Dodaj</a>
                         {% endif %}
                     </div>
                 </li>

@@ -1,0 +1,16 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Nowy przedmiot{% endblock %}
+
+{% block body %}
+<div class="container">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+        <li class="breadcrumb-item active"><a href="#">Nowy przedmiot</a></li>
+    </ol>
+    <h1 class="mb-3">Nowy przedmiot</h1>
+
+    {{ form(form) }}
+</div>
+{% endblock %}

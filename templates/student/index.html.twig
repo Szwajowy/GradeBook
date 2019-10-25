@@ -14,13 +14,14 @@
         <h1>Oceny</h1>
         <div class="btn-group" role="group">
             {% if is_granted('ROLE_TEACHER') %} 
-            <a href="/group/add" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
+            <a href="/subject/{{ subjectName.id }}/group/{{ subjectGroup.id }}/student/{{ student.id }}/grade/add" class="btn btn-primary btn-md mr-1"/>Dodaj ocene</a>
+            <a href="/subject/{{ subjectName.id }}/group/{{ subjectGroup.id }}/student/{{ student.id }}/grade/calculate" class="btn btn-primary btn-md disabled"/>Ocena końcowa</a>
             {% endif %}
         </div>
     </div>
 
     {% if grades %}
-        {{ include('/student/grade-table.html.twig') }}
+        {{ include('/grade/grade-table.html.twig') }}
     {% else %}
     
     <div class="alert alert-dismissible alert-danger">

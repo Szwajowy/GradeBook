@@ -6,6 +6,7 @@
             <th scope="col">Waga</th>
             <th scope="col">Typ</th>
             <th scope="col">Nauczyciel</th>
+            <th scope="col">Opcje</th>
         </tr>
     </thead>
     <tbody>
@@ -16,18 +17,18 @@
                 <td>{{ grade.gradeType.weight }}</td>
                 <td>{{ grade.gradeType.name }}</td>
                 <td>{{ grade.teacher.forename }} {{ grade.teacher.surname }}</td>
-                {# <td>
+                <td>
                     <div class="btn-group" role="group">
                         {% if is_granted('ROLE_USER') %}
                         <!-- Wyświetl opcję związane z daną produkcją dostępne dla użytkownika -->
                         {% endif %}
-                        {% if is_granted('ROLE_ADMIN') %}
+                        {% if is_granted('ROLE_TEACHER') %}
                         <!-- Wyświetl opcję związane z daną produkcją dostępne dla administratora -->
-                        <a href="/movies/edit/{{ movie.idProduction }}" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
-                        <a href="/movies/delete/{{ movie.idProduction }}" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
+                        <a href="/subject/{{subjectName.id}}/group/{{subjectGroup.id}}/student/{{student.id}}/grade/{{ grade.id }}/edit" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
+                        <a href="/subject/{{subjectName.id}}/group/{{subjectGroup.id}}/student/{{student.id}}/grade/{{ grade.id }}/remove" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
                         {% endif %}
                     </div>
-                </td> #}
+                </td>
             </tr>
         {% endfor %}
     </tbody>

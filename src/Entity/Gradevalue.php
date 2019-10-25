@@ -22,9 +22,9 @@ class Gradevalue
     private $id;
 
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(name="content", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Column(name="content", type="float", nullable=false)
      */
     private $content;
 
@@ -33,12 +33,12 @@ class Gradevalue
         return $this->id;
     }
 
-    public function getContent(): ?int
+    public function getContent(): ?float
     {
         return $this->content;
     }
 
-    public function setContent(int $content): self
+    public function setContent(float $content): self
     {
         $this->content = $content;
 

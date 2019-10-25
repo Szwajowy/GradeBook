@@ -36,7 +36,6 @@ class User implements UserInterface, \Serializable
     /**
      * @var string
      * 
-     * @Assert\NotBlank()
      * @Assert\Length(max=4096)
      */
     private $plainPassword;
@@ -51,7 +50,7 @@ class User implements UserInterface, \Serializable
     /**
      * @var array
      *
-     * @ORM\Column(name="roles", type="array", length=255, nullable=false)
+     * @ORM\Column(name="roles", type="array", length=255, nullable=true, options={"default"="NULL"})
      */
     private $roles = [];
 

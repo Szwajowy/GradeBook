@@ -10,14 +10,30 @@
         <li class="breadcrumb-item active"><a href="#">{{ subjectGroup.name }}</a></li>
     </ol>
     <div class="d-flex flex-row justify-content-between mb-3">
-        <h1>Uczniowie</h1>
+        <h1>Plan zajęć</h1>
         <div class="btn-group" role="group">
             {% if is_granted('ROLE_TEACHER') %} 
-            <a href="/group/add" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
+            <a href="/group/add" class="btn btn-primary btn-md mr-1"/>Edytuj plan</a>
             {% endif %}
         </div>
     </div>
 
+    {% if activities %}
+        {{ include('/subject_group/schedule-table.html.twig') }}
+    {% else %}
+    <div class="alert alert-dismissible alert-danger">
+        <strong>Nie znaleziono żadnych zajęć w tej grupie.</strong>
+    </div>
+    {% endif %}  
+
+    <div class="d-flex flex-row justify-content-between mt-5 mb-3">
+        <h1>Uczniowie</h1>
+        <div class="btn-group" role="group">
+            {% if is_granted('ROLE_TEACHER') %} 
+            <a href="/subject/{{ subjectName.id }}/group/{{ subjectGroup.id }}/student/create" class="btn btn-primary btn-md mr-1"/>Dodaj ucznia do grupy</a>
+            {% endif %}
+        </div>
+    </div>
     {% if students %}
         {{ include('/subject_group/student-table.html.twig') }}
     {% else %}

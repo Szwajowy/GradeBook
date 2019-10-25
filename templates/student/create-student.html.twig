@@ -1,0 +1,20 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Nowy student{% endblock %}
+
+{% block body %}
+<div class="container">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+        <li class="breadcrumb-item"><a href="#">{{ subjectName.content }}</a></li>
+        <li class="breadcrumb-item"><a href="#">{{ subjectGroup.name }}</a></li>
+        <li class="breadcrumb-item active"><a href="#">Nowy student</a></li>
+    </ol>
+
+    <h1 class="mt-5 mb-3">Nowy student</h1>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_widget(form) }}
+    {{ form_end(form) }}
+</div>
+{% endblock %}

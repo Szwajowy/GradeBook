@@ -3,19 +3,14 @@
         <tr>
             <th scope="col">ID</th>
             <th scope="col">Nazwa</th>
-            <th scope="col">Nauczyciele</th>
+            <th scope="col">Opcje</th>
         </tr>
     </thead>
     <tbody>
-        {% for group in subjectGroups %}
-            <tr class='clickable-row' data-href='/subject/{{ subjectName.id }}/group/{{ group.subjectgroup.id }}'>
+        {% for group in groups %}
+            <tr class='clickable-row'>
                 <th scope="row">{{ group.id }}</th>
-                <td>{{ group.subjectgroup.name }}</td>
-                <td>
-                {% for teacher in group.teacher %}
-                    {{ teacher.forename }} {{ teacher.surname }}{% if not loop.last %}, {% endif %}
-                {% endfor %}
-                </td>
+                <td>{{ group.name }}</td>
                 <td>
                     <div class="btn-group" role="group">
                         {% if is_granted('ROLE_USER') %}
@@ -23,8 +18,11 @@
                         {% endif %}
                         {% if is_granted('ROLE_TEACHER') %}
                         <!-- Wyświetl opcję związane z daną produkcją dostępne dla administratora -->
-                        <a href="/subjectGroup/{{ group.id }}/edit" class="btn btn-primary btn-sm mr-1 disabled" />Edytuj</a>
-                        <a href="/subjectGroup/{{ group.id }}/delete" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
+                        {% if subjectName is defined %}
+                        <a href="/subject/{{ subjectName.id }}/group/{{ group.id }}/add" class="btn btn-primary btn-sm mr-1"/>Dodaj</a>
+                        {% endif %}
+                        <a href="/group/{{ group.id }}/edit" class="btn btn-secondary btn-sm mr-1"/>Edytuj</a>
+                        <a href="/group/{{ group.id }}/remove" class="btn btn-danger btn-sm"/>Usuń</a>
                         {% endif %}
                     </div>
                 </td>
