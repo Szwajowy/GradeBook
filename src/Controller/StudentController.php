@@ -103,7 +103,7 @@ class StudentController extends AbstractController
 
         $student = $this->getDoctrine()->getRepository(User::class)->find($studentID);
 
-        $grades = $this->getDoctrine()->getRepository(Grade::class)->findBy([ 'student' => $studentID, 'subject' => $subject->getId() ]);
+        $grades = $this->getDoctrine()->getRepository(Grade::class)->findBy(['student' => $studentID, 'subject' => $subject->getId()], ['gradetype' => 'ASC']);
 
         return $this->render('student/index.html.twig', [
             'subjectName' => $subjectName,

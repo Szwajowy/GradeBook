@@ -24,7 +24,9 @@
                         {% endif %}
                         {% if is_granted('ROLE_TEACHER') %}
                         <!-- Wyświetl opcję związane z daną produkcją dostępne dla administratora -->
+                        {% if grade.gradeType.id != 5 %}
                         <a href="/subject/{{subjectName.id}}/group/{{subjectGroup.id}}/student/{{student.id}}/grade/{{ grade.id }}/edit" class="btn btn-primary btn-sm mr-1"/>Edytuj</a>
+                        {% endif %}
                         <a href="/subject/{{subjectName.id}}/group/{{subjectGroup.id}}/student/{{student.id}}/grade/{{ grade.id }}/remove" class="btn btn-danger btn-sm"  onclick="return confirm('Jesteś pewien?')"/>Usuń</a>
                         {% endif %}
                     </div>

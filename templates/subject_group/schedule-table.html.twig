@@ -1,22 +1,10 @@
 <div class="d-flex flex-row">
+    {% for activitie in activities %}
     <div class="card flex-fill">
         <div class="card-body">
-            <h5 class="card-title">21 pazdziernika</h5>
-            <p class="card-text">mgr Anna Kuzik</p>
+            <h5 class="card-title">{{ activitie.type }}</h5>
+            <p class="card-text">{{ activitie.startDate | date('d-m-Y h:i') }} - {{ activitie.endDate | date('h:i') }}</p>
         </div>
     </div>
-
-    <div class="card flex-fill">
-        <div class="card-body">
-            <h5 class="card-title">23 pazdziernika</h5>
-            <p class="card-text">mgr Anna Kuzik</p>
-        </div>
-    </div>
-
-    <div class="card flex-fill">
-        <div class="card-body">
-            <h5 class="card-title">25 pazdziernika</h5>
-            <p class="card-text">mgr Janek Kuzik</p>
-        </div>
-    </div>
+    {% endfor %}
 </div>

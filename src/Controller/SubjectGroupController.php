@@ -5,12 +5,15 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use App\Entity\User;
 use App\Entity\Subject;
 use App\Entity\Subjectname;
 use App\Entity\Subjectgroup;
 use App\Entity\Classblock;
+use App\Entity\Presence;
+use App\Entity\Presencevalue;
 
 use App\Form\Type\SubjectType;
 use App\Form\Type\SubjectgroupType;
@@ -135,24 +138,94 @@ class SubjectGroupController extends AbstractController
     }
 
     /**
-     * @Route("/subject/{subjectID}/group/{groupID}", name="subject_group")
+     * @Route("/subject/{subjectNameID}/group/{subjectGroupID}/presence", name="displayPresenceOfGroup")
      */
-    public function index(int $subjectID, int $groupID)
+    public function displayPresenceOfGroup(int $subjectNameID, int $subjectGroupID)
     {
-        $subjectName = $this->getDoctrine()->getRepository(Subjectname::class)->find($subjectID);
-        $subjectGroup = $this->getDoctrine()->getRepository(Subjectgroup::class)->find($groupID);
-        
-        $subject = $this->getDoctrine()->getRepository(Subject::class)->findBy([ 'subjectname' => $subjectID, 'subjectgroup' => $groupID ]);
+        $subjectName = $this->getDoctrine()->getRepository(Subjectname::class)->find($subjectNameID);
+        $subjectGroup = $this->getDoctrine()->getRepository(Subjectgroup::class)->find($subjectGroupID);
+    
+        $subject = $this->getDoctrine()->getRepository(Subject::class)->findBy([ 'subjectname' => $subjectNameID, 'subjectgroup' => $subjectGroupID ]);
+        $students = $this->getDoctrine()->getRepository(User::class)->findBy([ 'subjectgroup' => $subjectGroupID ]);
+        $classBlocks = $this->getDoctrine()->getRepository(Classblock::class)->findBy(['subject' => $subject[0]->getId()]);
+        $presenceValues = $this->getDoctrine()->getRepository(Presencevalue::class)->findAll();
 
-        // TODO: Pobierz zajęcia z danego tygodnia
-        $activities = $this->getDoctrine()->getRepository(Classblock::class)->findBy([ 'subject' => $subject[0]->getId() ]);
-        $students = $this->getDoctrine()->getRepository(User::class)->findBy([ 'subjectgroup' => $groupID ]);
+        $presences = [];
+        foreach($students as $student) {
+            foreach($classBlocks as $classBlock) {
+                $presences[$student->getId()][$classBlock->getId()] = new Presence();
+
+                $existingPresence = $this->getDoctrine()->getRepository(Presence::class)->findBy(['classblock' => $classBlock, 'student' => $student]);
+                
+                if(count($existingPresence) != 0) {
+                    $presences[$student->getId()][$classBlock->getId()] = $existingPresence[0];
+                } else {
+                    $presences[$student->getId()][$classBlock->getId()]->setClassblock($classBlock); 
+                    $presences[$student->getId()][$classBlock->getId()]->setPresencevalue($presenceValues[4]); 
+                    $presences[$student->getId()][$classBlock->getId()]->setStudent($student);
+    
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($presences[$student->getId()][$classBlock->getId()]);
+                    $entityManager->flush();
+                }
+            }
+        }
+
+        return $this->render('subject_group/check-presence.html.twig', [
+            'subjectName' => $subjectName,
+            'subjectGroup' => $subjectGroup,
+            'students' =>  $students,
+            'classBlocks' =>  $classBlocks,
+            'presenceValues' => $presenceValues,
+            'presences' => $presences,
+        ]);
+    }
+
+    /**
+     * @Route("/student/{studentID}/classBlock/{classBlockID}/presence/{presenceValueID}", name="changePresenceOfStudent")
+     */
+    public function changePresenceOfStudent(int $studentID, int $classBlockID, int $presenceValueID) {
+        $student = $this->getDoctrine()->getRepository(User::class)->find($studentID);
+        $classBlock = $this->getDoctrine()->getRepository(Classblock::class)->find($classBlockID);
+        $presenceValue = $this->getDoctrine()->getRepository(Presencevalue::class)->find($presenceValueID);
+
+        $existingPresence = $this->getDoctrine()->getRepository(Presence::class)->findBy(['classblock' => $classBlock, 'student' => $student]);
+        
+        $presence = new Presence();
+        if(count($existingPresence) != 0) {
+            $presence = $existingPresence[0]; 
+        } else {
+            $presence->setClassblock($classBlock);  
+            $presence->setStudent($student);
+        }
+
+        $presence->setPresencevalue($presenceValue);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($presence);
+        $entityManager->flush();
+
+        return new JsonResponse(['data' => 'Succesfully added!']);
+    }
+
+    /**
+     * @Route("/subject/{subjectNameID}/group/{subjectGroupID}", name="subject_group")
+     */
+    public function index(int $subjectNameID, int $subjectGroupID)
+    {
+        $subjectName = $this->getDoctrine()->getRepository(Subjectname::class)->find($subjectNameID);
+        $subjectGroup = $this->getDoctrine()->getRepository(Subjectgroup::class)->find($subjectGroupID);
+        
+        $subject = $this->getDoctrine()->getRepository(Subject::class)->findBy([ 'subjectname' => $subjectNameID, 'subjectgroup' => $subjectGroupID ]);
+
+        // TODO: Pobierz trzy najbliższe zajęcia zamiast tego
+        $classBlocks = $this->getDoctrine()->getRepository(Classblock::class)->findBy([ 'subject' => $subject[0]->getId() ], [], 3, 0);
+        $students = $this->getDoctrine()->getRepository(User::class)->findBy([ 'subjectgroup' => $subjectGroupID ]);
 
         return $this->render('subject_group/index.html.twig', [
             'subjectName' => $subjectName,
             'subjectGroup' => $subjectGroup,
             'students' =>  $students,
-            'activities' =>  $activities,
+            'activities' =>  $classBlocks,
         ]);
     }
 }

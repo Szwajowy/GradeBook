@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Grade
  *
  * @ORM\Table(name="grade", indexes={@ORM\Index(name="fk_Grade_GradeType1_idx", columns={"gradeType"}), @ORM\Index(name="fk_Grade_User2_idx", columns={"teacher"}), @ORM\Index(name="fk_Grade_Subject1_idx", columns={"subject"}), @ORM\Index(name="fk_Grade_User1_idx", columns={"student"}), @ORM\Index(name="fk_Grade_GradeValue1_idx", columns={"gradeValue"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\GradeRepository")
  */
 class Grade
 {

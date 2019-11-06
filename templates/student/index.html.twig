@@ -15,7 +15,7 @@
         <div class="btn-group" role="group">
             {% if is_granted('ROLE_TEACHER') %} 
             <a href="/subject/{{ subjectName.id }}/group/{{ subjectGroup.id }}/student/{{ student.id }}/grade/add" class="btn btn-primary btn-md mr-1"/>Dodaj ocene</a>
-            <a href="/subject/{{ subjectName.id }}/group/{{ subjectGroup.id }}/student/{{ student.id }}/grade/calculate" class="btn btn-primary btn-md disabled"/>Ocena końcowa</a>
+            <a href="/subject/{{ subjectName.id }}/group/{{ subjectGroup.id }}/student/{{ student.id }}/grade/calculateEndGrade" class="btn btn-primary btn-md"/>Ocena końcowa</a>
             {% endif %}
         </div>
     </div>

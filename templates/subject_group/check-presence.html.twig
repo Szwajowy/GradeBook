@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ subjectName.content }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
+        <li class="breadcrumb-item"><a href="#">{{ subjectName.content }}</a></li>
+        <li class="breadcrumb-item active"><a href="#">{{ subjectGroup.name }}</a></li>
+    </ol>
+    <div class="d-flex flex-row justify-content-between mb-3">
+        <h1>Obecność</h1>
+        <div class="btn-group" role="group">
+            {% if is_granted('ROLE_TEACHER') %} 
+            {# <a href="/group/add" class="btn btn-primary btn-md mr-1"/>Edytuj plan</a> #}
+            {% endif %}
+        </div>
+    </div>
+
+    {% if classBlocks and presenceValues %}
+        {{ include('/subject_group/check-presence-table.html.twig') }}
+    {% else %}
+    <div class="alert alert-dismissible alert-danger">
+        <strong>Nie znaleziono żadnych zajęć w tej grupie.</strong>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    var presenceSelectors = document.getElementsByClassName("presence-selector");
+
+    function changePresence(studentID, classBlockID, presenceValueID) {
+        const serverURL = 'https://localhost:8000';
+        const URL = serverURL+'/student/'+studentID+'/classBlock/'+classBlockID+'/presence/'+presenceValueID;
+
+        fetch(URL)
+            .then(data => { console.log(data); })
+            .then(res => { console.log(res); })
+            .catch(error => { console.log(error); });
+    }
+
+    console.group('Obecności uczniów');
+    Array.from(presenceSelectors).forEach((el) => {
+        console.log('%cStudent o id:','color: red', el.dataset.student);
+        console.log('Na zajęciach o id:', el.dataset.classblock);
+        console.log('Był:', el.value);
+        console.log('');
+        
+    });
+    console.groupEnd('Obecności uczniów');
+
+    Array.from(presenceSelectors).forEach((el) => {
+        el.addEventListener('change', () => {
+            console.log('Zmieniono obeność ucznia', el.dataset.student,'na zajęciach', el.dataset.classblock,'na', el.value);
+            changePresence(el.dataset.student, el.dataset.classblock, el.value);
+        });
+    });
+</script>
+{% endblock %}
