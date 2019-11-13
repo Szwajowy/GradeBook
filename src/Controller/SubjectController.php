@@ -11,7 +11,7 @@ use App\Entity\Subjectname;
 use App\Entity\Subjectgroup;
 use App\Entity\Subjectteacher;
 
-use App\Form\Type\SubjectnameType;
+use App\Form\Type\SubjectType;
 
 class SubjectController extends AbstractController
 {
@@ -46,12 +46,24 @@ class SubjectController extends AbstractController
     public function editSubject(Request $request, int $subjectID) {
         $subject = $this->getDoctrine()->getRepository(Subject::class)->find($subjectID);
         
-        $form = $this->createForm(SubjectnameType::class, $subject);
+        $form = $this->createForm(SubjectType::class, $subject);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
             $subject = $form->getData();
-            
+
+            // Usuń aktualnych nauczycieli
+            foreach($subject->getTeacher() as $existingTeacher) {
+                $subject->removeTeacher($existingTeacher['teacher']);
+            }
+
+            // Dodaj nowych
+            foreach($form->getData()->getTeacher() as $teacher) {
+                $subject->addTeacher($teacher['teacher']);
+            }
+
+            dump($subject->getTeacher());
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($subject);
             $entityManager->flush();
@@ -59,7 +71,7 @@ class SubjectController extends AbstractController
             return $this->redirectToRoute('main');
         }
             
-        return $this->render('/subject/add.html.twig', array('form' => $form->createView()));
+        return $this->render('/subject/edit.html.twig', array('form' => $form->createView()));
     }
 
     /**

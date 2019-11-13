@@ -5,20 +5,19 @@
 
 {% block body %}
 <div class="container">
-    <ol class="breadcrumb p-0">
+    {# <ol class="breadcrumb p-0">
         <li class="breadcrumb-item"><a href="#">Strona główna</a></li>
         <li class="breadcrumb-item"><a href="#">{{ subjectName.content }}</a></li>
         <li class="breadcrumb-item active"><a href="#">Edycja grupy</a></li>
-    </ol>
+    </ol> #}
 
     <h1 class="mt-5 mb-3">Edytuj grupę</h1>
     {{ form_start(form) }}
-        {{ form_row(form.subjectgroup) }}
 
-        <div class="well" id="genre_list" data-prototype="{{ form_widget(form.teacher.vars.prototype)|e('html_attr') }}">
+        <div class="well" id="teacher_list" data-prototype="{{ form_widget(form.teacher.vars.prototype)|e('html_attr') }}">
             {{ form_label(form.teacher) }}
             {% for row in form.teacher %}
-                <div class="genre-row">
+                <div class="teacher-row">
                     {{ form_widget(row) }}
                 </div>
             {% endfor %}

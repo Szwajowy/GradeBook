@@ -13,16 +13,13 @@
                 <td>{{ group.name }}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        {% if is_granted('ROLE_USER') %}
-                        <!-- Wyświetl opcję związane z daną produkcją dostępne dla użytkownika -->
-                        {% endif %}
                         {% if is_granted('ROLE_TEACHER') %}
-                        <!-- Wyświetl opcję związane z daną produkcją dostępne dla administratora -->
-                        {% if subjectName is defined %}
-                        <a href="/subject/{{ subjectName.id }}/group/{{ group.id }}/add" class="btn btn-primary btn-sm mr-1"/>Dodaj</a>
-                        {% endif %}
-                        <a href="/group/{{ group.id }}/edit" class="btn btn-secondary btn-sm mr-1"/>Edytuj</a>
-                        <a href="/group/{{ group.id }}/remove" class="btn btn-danger btn-sm"/>Usuń</a>
+                            {% if subjectName is defined %}
+                                <a href="/subject/{{ subjectName.id }}/group/{{ group.id }}/add" class="btn btn-primary btn-sm mr-1"/>Dodaj</a>
+                            {% else %}
+                                <a href="group/{{ group.id }}/edit" class="btn btn-secondary btn-sm mr-1"/>Edytuj</a>
+                                <a href="group/{{ group.id }}/remove" class="btn btn-danger btn-sm"/>Usuń</a>
+                            {% endif %}
                         {% endif %}
                     </div>
                 </td>

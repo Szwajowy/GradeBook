@@ -13,7 +13,7 @@
         <h1>Plan zajęć</h1>
         <div class="btn-group" role="group">
             {% if is_granted('ROLE_TEACHER') %} 
-            {# <a href="/group/add" class="btn btn-primary btn-md mr-1"/>Edytuj plan</a> #}
+            <a href="/subject/{{ subjectName.id }}/group/{{ subjectGroup.id }}/classBlock/create" class="btn btn-primary btn-md mr-1"/>Dodaj zajęcia</a>
             {% endif %}
         </div>
     </div>

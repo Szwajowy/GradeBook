@@ -12,7 +12,7 @@
         <h1>Grupy</h1>
         <div class="btn-group" role="group">
             {% if is_granted('ROLE_TEACHER') %} 
-            <a href="/subject/{{ subjectName.id }}/group/new" class="btn btn-primary btn-md mr-1"/>Dodaj</a>
+            <a href="/subject/{{ subjectName.id }}/group/new" class="btn btn-primary btn-md mr-1"/>Dodaj grupę do przedmiotu</a>
             {% endif %}
         </div>
     </div>

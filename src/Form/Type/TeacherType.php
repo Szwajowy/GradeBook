@@ -31,9 +31,7 @@ class TeacherType extends AbstractType
             'choice_label' => function($user) {
                 return $user->getForename().' '.$user->getSurname();
             },
-        ])->add('save', SubmitType::class, array(
-            'label' => 'Utwórz',
-        ));
+        ]);
     }
 
     // public function configureOptions(OptionsResolver $resolver)

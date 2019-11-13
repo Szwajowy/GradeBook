@@ -1,15 +1,15 @@
-var $genreCollectionHolder;
+var $teacherCollectionHolder;
 
 var $addNewItem = $('<a href="#" class="btn btn-info">Dodaj</a>');
 
 $(document).ready(function () {
-    $genreCollectionHolder = $('#genre_list');
+    $teacherCollectionHolder = $('#teacher_list');
 
-    $genreCollectionHolder.append($addNewItem);
+    $teacherCollectionHolder.append($addNewItem);
 
-    $genreCollectionHolder.data('index', $genreCollectionHolder.find('.genre-row').length);
+    $teacherCollectionHolder.data('index', $teacherCollectionHolder.find('.teacher-row').length);
 
-    $genreCollectionHolder.find('.genre-row').each(function() {
+    $teacherCollectionHolder.find('.teacher-row').each(function() {
         addRemoveButton($(this));
     });
 
@@ -20,15 +20,15 @@ $(document).ready(function () {
 })
 
 function addNewForm() {
-    var prototype = $genreCollectionHolder.data('prototype');
-    var index = $genreCollectionHolder.data('index');
+    var prototype = $teacherCollectionHolder.data('prototype');
+    var index = $teacherCollectionHolder.data('index');
     var newForm = prototype;
 
     newForm = newForm.replace(/__name__/g, index);
 
-    var $panel = $('<div class="genre-row"></div>').append(newForm);
+    var $panel = $('<div class="teacher-row"></div>').append(newForm);
 
-    $genreCollectionHolder.data('index', index+1);
+    $teacherCollectionHolder.data('index', index+1);
 
     addRemoveButton($panel);
 
@@ -40,7 +40,7 @@ function addRemoveButton($panel) {
 
     $removeButton.click(function (e) {
         e.preventDefault();
-        $(e.target).parents('.genre-row').remove();
+        $(e.target).parents('.teacher-row').remove();
     });
 
     $panel.append($removeButton);

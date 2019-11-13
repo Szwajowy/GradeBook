@@ -15,6 +15,7 @@ use App\Entity\Classblock;
 use App\Entity\Presence;
 use App\Entity\Presencevalue;
 
+use App\Form\Type\ClassblockType;
 use App\Form\Type\SubjectType;
 use App\Form\Type\SubjectgroupType;
 
@@ -56,56 +57,6 @@ class SubjectGroupController extends AbstractController
     }
 
     /**
-     * @Route("/subject/{subjectNameID}/group/{subjectGroupID}/edit", name="editGroup")
-     * Method({"GET", "POST"})
-     */
-    public function editGroup(Request $request, int $subjectNameID, int $subjectGroupID) {
-        $subjectName = $this->getDoctrine()->getRepository(Subjectname::class)->find($subjectNameID);
-        $subjectGroup = $this->getDoctrine()->getRepository(Subjectgroup::class)->find($subjectGroupID);
-
-        $form = $this->createForm(SubjectgroupType::class, $subjectGroup);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-            $subjectGroup = $form->getData();
-            
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($subjectGroup);
-            $entityManager->flush();
-
-            return $this->redirect('/subject/'.$subjectName->getId().'/group/new');
-        }
-
-        return $this->render('/subject_group/edit.html.twig', [
-            'subjectName' => $subjectName,
-            'subjectGroup' => $subjectGroup,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/subject/{subjectNameID}/group/{subjectGroupID}/remove", name="removeGroup")
-     * Method({"GET", "POST"})
-     */
-    public function removeGroup(int $subjectNameID, int $subjectGroupID) {
-        $subjectName = $this->getDoctrine()->getRepository(Subjectname::class)->find($subjectNameID);
-        $subjectGroup = $this->getDoctrine()->getRepository(Subjectgroup::class)->find($subjectGroupID);
-
-        // Find everyone subject where subjectGroup is related
-        $subjects = $this->getDoctrine()->getRepository(Subject::class)->findBy(['subjectgroup' => $subjectGroup]);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        foreach($subjects as $subject) {
-            $entityManager->remove($subject);
-        }
-
-        $entityManager->remove($subjectGroup);
-        $entityManager->flush();
-
-        return $this->redirect('/subject/'.$subjectName->getId());
-    }
-
-    /**
      * @Route("/subject/{subjectNameID}/group/{subjectGroupID}/add", name="addGroupToSubject")
      * Method({"GET", "POST"})
      */
@@ -126,14 +77,36 @@ class SubjectGroupController extends AbstractController
     }
 
     /**
-     * @Route("/groups", name="displayGroups")
+     * @Route("/subject/{subjectNameID}/group/{subjectGroupID}/classBlock/create", name="createClassBlock")
      */
-    public function displayGroups()
-    {
-        $existingGroups = $this->getDoctrine()->getRepository(Subjectgroup::class)->findAll();
+    public function createClassBlock(Request $request, int $subjectNameID, int $subjectGroupID) {
+        $subjectName = $this->getDoctrine()->getRepository(Subjectname::class)->find($subjectNameID);
+        $subjectGroup = $this->getDoctrine()->getRepository(Subjectgroup::class)->find($subjectGroupID);
 
-        return $this->render('group/index.html.twig', [
-            'groups' => $existingGroups,
+        $subject = $this->getDoctrine()->getRepository(Subject::class)->findBy([ 'subjectname' => $subjectNameID, 'subjectgroup' => $subjectGroupID ]);
+        if($subject)
+            $subject = $subject[0];
+            
+        $classBlock = new Classblock();
+
+        $form = $this->createForm(ClassblockType::class, $classBlock);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $classBlock = $form->getData();
+            $classBlock->setSubject($subject);
+            
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($classBlock);
+            $entityManager->flush();
+
+            return $this->redirect('/subject/'.$subjectNameID.'/group/'.$subjectGroupID);
+        }
+
+        return $this->render('/subject_group/create-class-block.html.twig', [
+            'subjectName' => $subjectName,
+            'subjectGroup' => $subjectGroup,
+            'form' => $form->createView(),
         ]);
     }
 
