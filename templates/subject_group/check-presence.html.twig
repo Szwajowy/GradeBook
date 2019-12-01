@@ -32,8 +32,8 @@
     var presenceSelectors = document.getElementsByClassName("presence-selector");
 
     function changePresence(studentID, classBlockID, presenceValueID) {
-        const serverURL = 'http:/so840.sohost.pl';
-        const URL = serverURL+'/student/'+studentID+'/classBlock/'+classBlockID+'/presence/'+presenceValueID;
+        const server = 'http:/so840.sohost.pl';
+        const URL = server+'/student/'+studentID+'/classBlock/'+classBlockID+'/presence/'+presenceValueID;
 
         fetch(URL)
             .then(data => { console.log(data); })
