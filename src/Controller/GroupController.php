@@ -48,11 +48,32 @@ class GroupController extends AbstractController
         $subjectName = $this->getDoctrine()->getRepository(Subjectname::class)->find($subjectNameID);
         $subjectGroup = $this->getDoctrine()->getRepository(Subjectgroup::class)->find($subjectGroupID);
 
-        // Find everyone subject where subjectGroup is related
+        // Find every subject where subjectGroup is related
         $subjects = $this->getDoctrine()->getRepository(Subject::class)->findBy(['subjectgroup' => $subjectGroup]);
+
+        // Find all students that were in this group
+        $students = $this->getDoctrine()->getRepository(User::class)->findBy(['subjectgroup' => $subjectGroup])
+        
+        // Find all presence students had
 
         $entityManager = $this->getDoctrine()->getManager();
         foreach($subjects as $subject) {
+            // Find all grades students had
+            $grades = $this->getDoctrine()->getRepository(Grade::class)->findBy(['subject' => $subject]);
+            foreach($grades as $grade) {
+                $entityManager->remove($grade);
+            }
+
+            // Find all classblocks
+            $classblocks = $this->getDoctrine()->getRepository(Classblock::class)->findBy(['subject' => $subject]);
+            foreach($classblocks as $classblock) {
+                $presences = $this->getDoctrine()->getRepository(Presence::class)->findBy(['classblock' => $classblock]);
+                foreach($presences as $presence) {
+                    $entityManager->remove($presence);
+                }
+
+                $entityManager->remove($classblocks);
+            }
             $entityManager->remove($subject);
         }
 

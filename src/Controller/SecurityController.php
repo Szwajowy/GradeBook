@@ -9,7 +9,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 use App\Entity\User;
+use App\Entity\Subjectgroup;
 
 class SecurityController extends AbstractController
 {
@@ -40,6 +43,11 @@ class SecurityController extends AbstractController
                     'label' => 'Powtórz hasło',
                     'attr' => array('class' => 'form-control')),
             ))
+            ->add('subjectgroup', EntityType::class, [
+                'class' => Subjectgroup::class,
+                'label' => 'Grupa',
+                'choice_label' => 'name'
+            ])
             ->add('register', SubmitType::class, array(
                 'label' => 'Zarejestruj',
                 'attr' => array('class' => 'btn btn-primary mt-3')
