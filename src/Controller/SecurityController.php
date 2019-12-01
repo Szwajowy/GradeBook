@@ -31,9 +31,6 @@ class SecurityController extends AbstractController
                 'label' => 'Login',
                 'attr' => array('class' => 'form-control')
                 ))
-            ->add('email', TextType::class, array(
-                'attr' => array('class' => 'form-control')
-            ))
             ->add('plainPassword', RepeatedType::class, array(
                 'type' => PasswordType::class,
                 'first_options'  => array(
@@ -42,6 +39,15 @@ class SecurityController extends AbstractController
                 'second_options' => array(
                     'label' => 'Powtórz hasło',
                     'attr' => array('class' => 'form-control')),
+            ))
+            ->add('forename', TextType::class, array(
+                'attr' => array('class' => 'form-control')
+            ))
+            ->add('surname', TextType::class, array(
+                'attr' => array('class' => 'form-control')
+            ))
+            ->add('email', TextType::class, array(
+                'attr' => array('class' => 'form-control')
             ))
             ->add('subjectgroup', EntityType::class, [
                 'class' => Subjectgroup::class,
