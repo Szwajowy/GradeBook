@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Subject;
 use App\Entity\Subjectname;
 use App\Entity\Subjectgroup;
+use App\Entity\Grade;
+use App\Entity\User;
+use App\Entity\Presence;
+use App\Entity\Classblock;
 
 class GroupController extends AbstractController
 {
@@ -44,19 +48,19 @@ class GroupController extends AbstractController
      * @Route("/group/{subjectGroupID}/remove", name="removeGroup")
      * Method({"GET", "POST"})
      */
-    public function removeGroup(int $subjectNameID, int $subjectGroupID) {
-        $subjectName = $this->getDoctrine()->getRepository(Subjectname::class)->find($subjectNameID);
+    public function removeGroup(int $subjectGroupID) {
         $subjectGroup = $this->getDoctrine()->getRepository(Subjectgroup::class)->find($subjectGroupID);
 
         // Find every subject where subjectGroup is related
         $subjects = $this->getDoctrine()->getRepository(Subject::class)->findBy(['subjectgroup' => $subjectGroup]);
 
-        // Find all students that were in this group
-        $students = $this->getDoctrine()->getRepository(User::class)->findBy(['subjectgroup' => $subjectGroup])
-        
-        // Find all presence students had
-
         $entityManager = $this->getDoctrine()->getManager();
+        // Find all students that were in this group
+        $students = $this->getDoctrine()->getRepository(User::class)->findBy(['subjectgroup' => $subjectGroup]);
+        foreach($students as $student) {
+            $entityManager->remove($student);
+        }
+
         foreach($subjects as $subject) {
             // Find all grades students had
             $grades = $this->getDoctrine()->getRepository(Grade::class)->findBy(['subject' => $subject]);
@@ -72,7 +76,7 @@ class GroupController extends AbstractController
                     $entityManager->remove($presence);
                 }
 
-                $entityManager->remove($classblocks);
+                $entityManager->remove($classblock);
             }
             $entityManager->remove($subject);
         }
@@ -80,7 +84,7 @@ class GroupController extends AbstractController
         $entityManager->remove($subjectGroup);
         $entityManager->flush();
 
-        return $this->redirect('/subject/'.$subjectName->getId());
+        return $this->redirect('/groups');
     }
 
     /**
